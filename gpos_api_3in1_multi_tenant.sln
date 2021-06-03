@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gpos_api_3in1_multi_tenant", "gpos_api_3in1_multi_tenant.csproj", "{E438AE9A-8CFD-40A8-A82E-5DC7C50797EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E438AE9A-8CFD-40A8-A82E-5DC7C50797EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E438AE9A-8CFD-40A8-A82E-5DC7C50797EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E438AE9A-8CFD-40A8-A82E-5DC7C50797EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E438AE9A-8CFD-40A8-A82E-5DC7C50797EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE7F4D0D-0F22-4F9D-967B-7CDF7F9A8DCE}
+	EndGlobalSection
+EndGlobal
