@@ -57,17 +57,25 @@ namespace FarroAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var host = _context.HostTenants.Where(c => c.Id == HostId).FirstOrDefault();
-            if (host != null)
+            var webapp = _context.webApps.FirstOrDefault(c => c.Id == HostId);
+            if (webapp != null)
             {
-                var connectionString = host.Connstr;
-                DbConnection = new SqlConnection(this._configuration.GetConnectionString(connectionString));
-                //optionsBuilder.UseSqlServer(DbConnection.ToString());
-                optionsBuilder.UseSqlServer(connectionString);
+                var dbid = webapp.DbId;
+                var host = _context.HostTenants.Where(c => c.Id == dbid).FirstOrDefault();
+                if (host != null)
+                {
+                    var connectionString = host.Connstr;
+                    DbConnection = new SqlConnection(this._configuration.GetConnectionString(connectionString));
+                    //optionsBuilder.UseSqlServer(DbConnection.ToString());
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+                else
+                    DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
             }
             else
                 DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

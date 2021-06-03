@@ -74,21 +74,31 @@ namespace Sync.Data
         public virtual DbSet<WorkTime> WorkTimes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
- //         if (!optionsBuilder.IsConfigured)
+   //       if (!optionsBuilder.IsConfigured)
             {
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //      var connectionString = _context.HostTenants.Where(c => c.Id == )
-                //var hostId = hostId;// _configuration["HostId"];
-                var host = _context.HostTenants.Where(c => c.Id == HostId).FirstOrDefault();
-                if (host != null)
+                var webapp = _context.webApps.FirstOrDefault(c => c.Id == HostId);
+                if (webapp != null)
                 {
-                    var connectionString = host.Connstr;
-                    DbConnection = new SqlConnection(this._configuration.GetConnectionString(connectionString));
-                    //optionsBuilder.UseSqlServer(DbConnection.ToString());
-                    optionsBuilder.UseSqlServer(connectionString);
+                    var dbid = webapp.DbId;
+                    var host = _context.HostTenants.Where(c => c.Id == dbid).FirstOrDefault();
+                    if (host != null)
+                    {
+                        var connectionString = host.Connstr;
+                        DbConnection = new SqlConnection(this._configuration.GetConnectionString(connectionString));
+                        optionsBuilder.UseSqlServer(connectionString);
+                    }
+                    else
+                    {
+                        DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                        optionsBuilder.UseSqlServer(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                    }
                 }
                 else
+                {
                     DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                    optionsBuilder.UseSqlServer(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                }
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using gpos_api_3in1_multi_tenant.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace eCommerce_API_RST_Multi.Data
         }
 
         public DbSet<HostTenant> HostTenants { get; set; }
+        public DbSet<WebApp> webApps { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
@@ -40,6 +42,13 @@ namespace eCommerce_API_RST_Multi.Data
                     .HasColumnType("datetime").HasDefaultValueSql("(getdate())");
                 entity.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime");
 
+            });
+
+            modelBuilder.Entity<WebApp>(entity =>
+            {
+                entity.ToTable("web_app");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.DbId).HasColumnName("db_id");
             });
         }
     }
