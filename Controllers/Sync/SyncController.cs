@@ -484,6 +484,7 @@ namespace Sync.Controllers
 										BranchId = ui.BranchId,
 										TimeStamp = ui.TimeStamp, //BitConverter.ToString(ui.TimeStamp),
 																  //ui.DateUpdated,
+										TimeStampS = ui.TimeStampS,
 										Code = ui.ItemCode,
 										SupplierCode = c.SupplierCode,
 										Name = c.Name,

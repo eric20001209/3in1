@@ -48,5 +48,6 @@ namespace Sync.Dtos
 //		public bool Delete { get; set; }
 		[Timestamp]
 		public byte[] TimeStamp { get; set; }
+		public string TimeStampS { get; set; }
 	}
 }
