@@ -86,7 +86,7 @@ namespace Sync.Models
         public byte? Promotion { get; set; }
         public byte? ComingSoon { get; set; }
         public double? Weight { get; set; }
-        public int? outer_pack { get; set; }
+ //     public int? outer_pack { get; set; }
         public byte? Inactive { get; set; }
         public string StockLocation { get; set; }
         public bool? Popular { get; set; }

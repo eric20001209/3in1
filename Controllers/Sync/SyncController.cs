@@ -1590,171 +1590,181 @@ namespace Sync.Controllers
 				message.Msg = "fail!";
 				return BadRequest(message);
 			}
-			//code_relations table to update
-			var codeRelationsToUpdate = _context.CodeRelations.Where(c => c.Code == code).FirstOrDefault();
-			if (codeRelationsToUpdate == null)
-			{
-				_logger.LogError($"cannot find item ,code {code}");
-				MessageDto message = new MessageDto();
-				message.Processed.Add(new
-				{
-					Msg = "Cannot find this item! ",
-					Code = code
-				});
-				message.Code = "1";
-				message.Msg = "fail!";
-				return NotFound(message);
-			}
+            try
+            {
+				//code_relations table to update
+				var codeRelationsToUpdate = _context.CodeRelations.Where(c => c.Code == code)
+					.FirstOrDefault();
 
-			var itemFromCloud = await _context.UpdatedItem.FirstOrDefaultAsync(c => c.ItemCode == code && c.BranchId == branchId);
-			if (itemFromCloud != null)
-			{
-				int? timeStampFromDb = int.Parse(itemFromCloud.TimeStampS);
-				if (timeStampFromDb != null)
+				if (codeRelationsToUpdate == null)
 				{
-					if (timestamp < timeStampFromDb)
+					_logger.LogError($"cannot find item ,code {code}");
+					MessageDto message = new MessageDto();
+					message.Processed.Add(new
 					{
+						Msg = "Cannot find this item! ",
+						Code = code
+					});
+					message.Code = "1";
+					message.Msg = "fail!";
+					return NotFound(message);
+				}
+
+				var itemFromCloud = await _context.UpdatedItem.FirstOrDefaultAsync(c => c.ItemCode == code && c.BranchId == branchId);
+				if (itemFromCloud != null)
+				{
+					int? timeStampFromDb = int.Parse(itemFromCloud.TimeStampS);
+					if (timeStampFromDb != null)
+					{
+						if (timestamp < timeStampFromDb)
+						{
+							MessageDto messageDto = new MessageDto();
+							messageDto.Processed.Add(new
+							{
+								Msg = "Process fail, cloud data is newer than local ",
+								Code = code
+							});
+							messageDto.Code = "1";
+							messageDto.Msg = "fail!";
+							return Ok(messageDto);
+						}
+					}
+				}
+
+				//stock_qty table to update
+				var stockQtyToUpdate = _context.StockQty.Where(c => c.Code == code && c.BranchId == branchId).FirstOrDefault();
+				//if (stockQtyToUpdate == null)
+				//{
+				//	_logger.LogError($"cannot find code in stock_qty ,code {code}, branch {branchId}");
+				//	return NotFound($"cannot find code in stock_qty ,code {code}, branch {branchId}");
+				//}
+
+				//code_branch to update
+				var codeBranchToUpdate = _context.CodeBranch.Where(c => c.Code == code && c.BranchId == branchId).FirstOrDefault();
+				//if (codeBranchToUpdate == null)
+				//{
+				//	_logger.LogError($"cannot find code in code_branch ,code {code}, branch {branchId}");
+				//	return NotFound($"cannot find code in code_branch ,code {code}, branch {branchId}");
+				//}
+
+				using (var dbTransaction = await _context.Database.BeginTransactionAsync())
+				{
+					try
+					{
+						/*	1. update code_relations */
+						var codeRelationsToPatch = new EditItemDto()
+						{
+							Name = codeRelationsToUpdate.Name,
+							Description = codeRelationsToUpdate.NameCn,
+							Price = codeRelationsToUpdate.Price1,
+							Cost = codeRelationsToUpdate.ManualCostFrd,
+							Cat = codeRelationsToUpdate.Cat,
+							SCat = codeRelationsToUpdate.SCat,
+							SSCat = codeRelationsToUpdate.SsCat,
+							SupplierCode = codeRelationsToUpdate.SupplierCode,
+							AutoWeigh = codeRelationsToUpdate.HasScale,
+							PriceBarcode = codeRelationsToUpdate.IsBarcodeprice,
+							IdCheck = codeRelationsToUpdate.IsIdCheck,
+							IsSpecial = codeRelationsToUpdate.IsSpecial,
+							SpecialPrice = codeRelationsToUpdate.SpecialPrice,
+							SpecialStartTime = codeRelationsToUpdate.SpecialPriceStartDate ?? DateTime.MaxValue,
+							SpecialEndTime = codeRelationsToUpdate.SpecialPriceEndDate ?? DateTime.MinValue,
+							PromoId = codeRelationsToUpdate.PromoId,
+							Barcode = codeRelationsToUpdate.Barcode,
+							LevelPrice1 = codeRelationsToUpdate.LevelPrice1,
+							LevelPrice2 = codeRelationsToUpdate.LevelPrice2,
+							LevelPrice3 = codeRelationsToUpdate.LevelPrice3,
+							LevelPrice4 = codeRelationsToUpdate.LevelPrice4,
+							LevelPrice5 = codeRelationsToUpdate.LevelPrice5,
+							LevelPrice6 = codeRelationsToUpdate.LevelPrice6
+						};
+
+						patchDoc.ApplyTo(codeRelationsToPatch, ModelState);
+						if (!ModelState.IsValid)
+							return BadRequest(ModelState);
+
+						codeRelationsToUpdate.Name = codeRelationsToPatch.Name;
+						codeRelationsToUpdate.NameCn = codeRelationsToPatch.Description;
+						codeRelationsToUpdate.Price1 = codeRelationsToPatch.Price ?? 0;
+						codeRelationsToUpdate.ManualCostFrd = codeRelationsToPatch.Cost ?? 0;
+						codeRelationsToUpdate.AverageCost = codeRelationsToPatch.Cost ?? 0;
+						codeRelationsToUpdate.Cat = codeRelationsToPatch.Cat;
+						codeRelationsToUpdate.SCat = codeRelationsToPatch.SCat;
+						codeRelationsToUpdate.SsCat = codeRelationsToPatch.SSCat;
+						codeRelationsToUpdate.SupplierCode = codeRelationsToPatch.SupplierCode;
+						codeRelationsToUpdate.HasScale = codeRelationsToPatch.AutoWeigh ?? false;
+						codeRelationsToUpdate.IsBarcodeprice = codeRelationsToPatch.PriceBarcode ?? false;
+						codeRelationsToUpdate.IsIdCheck = codeRelationsToPatch.IdCheck ?? false;
+						codeRelationsToUpdate.IsSpecial = codeRelationsToPatch.IsSpecial;
+						codeRelationsToUpdate.SpecialPrice = codeRelationsToPatch.SpecialPrice;
+						codeRelationsToUpdate.SpecialPriceStartDate = codeRelationsToPatch.SpecialStartTime;
+						codeRelationsToUpdate.SpecialPriceEndDate = codeRelationsToPatch.SpecialEndTime;
+						codeRelationsToUpdate.PromoId = codeRelationsToPatch.PromoId;
+						codeRelationsToUpdate.Barcode = codeRelationsToPatch.Barcode;
+						codeRelationsToUpdate.LevelPrice1 = codeRelationsToPatch.LevelPrice1 ?? 0;
+						codeRelationsToUpdate.LevelPrice2 = codeRelationsToPatch.LevelPrice2 ?? 0;
+						codeRelationsToUpdate.LevelPrice3 = codeRelationsToPatch.LevelPrice3 ?? 0;
+						codeRelationsToUpdate.LevelPrice4 = codeRelationsToPatch.LevelPrice4 ?? 0;
+						codeRelationsToUpdate.LevelPrice5 = codeRelationsToPatch.LevelPrice5 ?? 0;
+						codeRelationsToUpdate.LevelPrice6 = codeRelationsToPatch.LevelPrice6 ?? 0;
+
+						/*	update code_branch	*/
+						if (codeBranchToUpdate != null)
+						{
+							var codeBranchToPatch = new EditItemDto()
+							{
+								BranchId = branchId,
+								Price = codeBranchToUpdate.Price1
+							};
+
+							patchDoc.ApplyTo(codeBranchToPatch, ModelState);
+							if (!ModelState.IsValid)
+								return BadRequest(ModelState);
+
+							codeBranchToUpdate.Price1 = codeBranchToPatch.Price;
+							codeBranchToUpdate.Inactive = false;
+						}
+
+						/*	update stock_qty	*/
+						if (stockQtyToUpdate != null)
+						{
+							var stockQtyToPatch = new EditItemDto
+							{
+								Qty = stockQtyToUpdate.Qty
+							};
+							patchDoc.ApplyTo(stockQtyToPatch, ModelState);
+							if (!ModelState.IsValid)
+								return BadRequest(ModelState);
+							stockQtyToUpdate.Qty = stockQtyToPatch.Qty;
+						}
+						var updateResult = await _context.SaveChangesAsync();
+						dbTransaction.Commit();
+
 						MessageDto messageDto = new MessageDto();
 						messageDto.Processed.Add(new
 						{
-							Msg = "Process fail, cloud data is newer than local ",
+							Msg = "Processed successfully ",
 							Code = code
 						});
-						messageDto.Code = "1";
-						messageDto.Msg = "fail!";
+						messageDto.Code = "0";
+						messageDto.Msg = "success!";
 						return Ok(messageDto);
 					}
+					catch (Exception ex)
+					{
+
+						dbTransaction.Rollback();
+						_logger.LogError(ex.Message + "\r\n" + $"Error, cannot edit item");
+						return BadRequest(ex);
+					}
 				}
 			}
+			catch (Exception ex)
+            {
 
-			//stock_qty table to update
-			var stockQtyToUpdate = _context.StockQty.Where(c => c.Code == code && c.BranchId == branchId).FirstOrDefault();
-			//if (stockQtyToUpdate == null)
-			//{
-			//	_logger.LogError($"cannot find code in stock_qty ,code {code}, branch {branchId}");
-			//	return NotFound($"cannot find code in stock_qty ,code {code}, branch {branchId}");
-			//}
-
-			//code_branch to update
-			var codeBranchToUpdate = _context.CodeBranch.Where(c => c.Code == code && c.BranchId == branchId).FirstOrDefault();
-			//if (codeBranchToUpdate == null)
-			//{
-			//	_logger.LogError($"cannot find code in code_branch ,code {code}, branch {branchId}");
-			//	return NotFound($"cannot find code in code_branch ,code {code}, branch {branchId}");
-			//}
-
-			using (var dbTransaction = await _context.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					/*	1. update code_relations */
-					var codeRelationsToPatch = new EditItemDto()
-					{
-						Name = codeRelationsToUpdate.Name,
-						Description = codeRelationsToUpdate.NameCn,
-						Price = codeRelationsToUpdate.Price1,
-						Cost = codeRelationsToUpdate.ManualCostFrd,
-						Cat = codeRelationsToUpdate.Cat,
-						SCat = codeRelationsToUpdate.SCat,
-						SSCat = codeRelationsToUpdate.SsCat,
-						SupplierCode = codeRelationsToUpdate.SupplierCode,
-						AutoWeigh = codeRelationsToUpdate.HasScale,
-						PriceBarcode = codeRelationsToUpdate.IsBarcodeprice,
-						IdCheck = codeRelationsToUpdate.IsIdCheck,
-						IsSpecial = codeRelationsToUpdate.IsSpecial,
-						SpecialPrice = codeRelationsToUpdate.SpecialPrice,
-						SpecialStartTime = codeRelationsToUpdate.SpecialPriceStartDate ?? DateTime.MaxValue,
-						SpecialEndTime = codeRelationsToUpdate.SpecialPriceEndDate ?? DateTime.MinValue,
-						PromoId = codeRelationsToUpdate.PromoId,
-						Barcode = codeRelationsToUpdate.Barcode,
-						LevelPrice1 = codeRelationsToUpdate.LevelPrice1,
-						LevelPrice2 = codeRelationsToUpdate.LevelPrice2,
-						LevelPrice3 = codeRelationsToUpdate.LevelPrice3,
-						LevelPrice4 = codeRelationsToUpdate.LevelPrice4,
-						LevelPrice5 = codeRelationsToUpdate.LevelPrice5,
-						LevelPrice6 = codeRelationsToUpdate.LevelPrice6
-					};
-
-					patchDoc.ApplyTo(codeRelationsToPatch, ModelState);
-					if (!ModelState.IsValid)
-						return BadRequest(ModelState);
-
-					codeRelationsToUpdate.Name = codeRelationsToPatch.Name;
-					codeRelationsToUpdate.NameCn = codeRelationsToPatch.Description;
-					codeRelationsToUpdate.Price1 = codeRelationsToPatch.Price ?? 0;
-					codeRelationsToUpdate.ManualCostFrd = codeRelationsToPatch.Cost ?? 0;
-					codeRelationsToUpdate.AverageCost = codeRelationsToPatch.Cost ?? 0;
-					codeRelationsToUpdate.Cat = codeRelationsToPatch.Cat;
-					codeRelationsToUpdate.SCat = codeRelationsToPatch.SCat;
-					codeRelationsToUpdate.SsCat = codeRelationsToPatch.SSCat;
-					codeRelationsToUpdate.SupplierCode = codeRelationsToPatch.SupplierCode;
-					codeRelationsToUpdate.HasScale = codeRelationsToPatch.AutoWeigh ?? false;
-					codeRelationsToUpdate.IsBarcodeprice = codeRelationsToPatch.PriceBarcode ?? false;
-					codeRelationsToUpdate.IsIdCheck = codeRelationsToPatch.IdCheck ?? false;
-					codeRelationsToUpdate.IsSpecial = codeRelationsToPatch.IsSpecial;
-					codeRelationsToUpdate.SpecialPrice = codeRelationsToPatch.SpecialPrice;
-					codeRelationsToUpdate.SpecialPriceStartDate = codeRelationsToPatch.SpecialStartTime;
-					codeRelationsToUpdate.SpecialPriceEndDate = codeRelationsToPatch.SpecialEndTime;
-					codeRelationsToUpdate.PromoId = codeRelationsToPatch.PromoId;
-					codeRelationsToUpdate.Barcode = codeRelationsToPatch.Barcode;
-					codeRelationsToUpdate.LevelPrice1 = codeRelationsToPatch.LevelPrice1 ?? 0;
-					codeRelationsToUpdate.LevelPrice2 = codeRelationsToPatch.LevelPrice2 ?? 0;
-					codeRelationsToUpdate.LevelPrice3 = codeRelationsToPatch.LevelPrice3 ?? 0;
-					codeRelationsToUpdate.LevelPrice4 = codeRelationsToPatch.LevelPrice4 ?? 0;
-					codeRelationsToUpdate.LevelPrice5 = codeRelationsToPatch.LevelPrice5 ?? 0;
-					codeRelationsToUpdate.LevelPrice6 = codeRelationsToPatch.LevelPrice6 ?? 0;
-
-					/*	update code_branch	*/
-					if (codeBranchToUpdate != null)
-					{
-						var codeBranchToPatch = new EditItemDto()
-						{
-							BranchId = branchId,
-							Price = codeBranchToUpdate.Price1
-						};
-
-						patchDoc.ApplyTo(codeBranchToPatch, ModelState);
-						if (!ModelState.IsValid)
-							return BadRequest(ModelState);
-
-						codeBranchToUpdate.Price1 = codeBranchToPatch.Price;
-						codeBranchToUpdate.Inactive = false;
-					}
-
-					/*	update stock_qty	*/
-					if (stockQtyToUpdate != null)
-					{
-						var stockQtyToPatch = new EditItemDto
-						{
-							Qty = stockQtyToUpdate.Qty
-						};
-						patchDoc.ApplyTo(stockQtyToPatch, ModelState);
-						if (!ModelState.IsValid)
-							return BadRequest(ModelState);
-						stockQtyToUpdate.Qty = stockQtyToPatch.Qty;
-					}
-					var updateResult = await _context.SaveChangesAsync();
-					dbTransaction.Commit();
-
-					MessageDto messageDto = new MessageDto();
-					messageDto.Processed.Add(new
-					{
-						Msg = "Processed successfully ",
-						Code = code
-					});
-					messageDto.Code = "0";
-					messageDto.Msg = "success!";
-					return Ok(messageDto);
-				}
-				catch (Exception ex)
-				{
-
-					dbTransaction.Rollback();
-					_logger.LogError(ex.Message + "\r\n" + $"Error, cannot edit item");
-					return BadRequest(ex);
-				}
+				_logger.LogError(ex.Message + "\r\n" + $"Error, cannot edit item");
+				return BadRequest(ex);
 			}
-
 		}
 
 		[HttpPost("{auth}/editBarcodeAndSpecial/{branchId}/{code}/{timestamp}")]
