@@ -11,7 +11,7 @@ using System.Data.SqlClient;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/SalesMonthlyReport")]
+    [Route("{hostId}/mreport/api/SalesMonthlyReport")]
     public class SalesMonthlyReportController : Controller
     {
         private readonly farroContext _context;

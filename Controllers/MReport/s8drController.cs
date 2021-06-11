@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/[controller]")]
+    [Route("{hostId}/mreport/api/[controller]")]
     [ApiController]
     public class s8drController : ControllerBase
     {

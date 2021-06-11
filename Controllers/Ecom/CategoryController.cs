@@ -8,7 +8,7 @@ using eCommerce_API.Data;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/category")]
+    [Route("{hostId}/ecom/api/category")]
     [ApiController]
     public class CategoryController : ControllerBase
     {

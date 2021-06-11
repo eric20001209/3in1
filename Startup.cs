@@ -92,17 +92,18 @@ namespace eCommerce_API
             services.AddSingleton(mapper);
 
             services.AddCors();
-//          string connectionString = @"Server=192.168.1.204\sql2012;Database=wanfang_cloud14;User Id=eznz;password=9seqxtf7";
+            //  string connectionString = @"Server=192.168.1.204\sql2012;Database=wanfang_cloud14;User Id=eznz;password=9seqxtf7";
             services.AddScoped<rst374_cloud12Context>();
             services.AddTransient<rst374_cloud12Context>();
             services.AddScoped<FreightContext>();
+            services.AddTransient<FreightContext>();
 
- //         services.AddScoped<AppDbContext>();
+//          services.AddScoped<AppDbContext>();
 
             services.AddScoped<ISetting, SettingsRepository>();
             services.AddScoped<eCommerce_API.Services.IItem, eCommerce_API.Services.ItemRepository>();
             services.AddScoped<IOrder, OrderRepository>();
-            services.AddTransient<FreightContext>();
+
             services.AddTransient<iMailService, MailService>();
             Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll");
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));   //DinkToPdf DI

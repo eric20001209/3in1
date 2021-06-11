@@ -14,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace eCommerce_API_RST.Controllers
 {
-    [Route("api/dealer/item")]
+    [Route("{hostId}/ecom/api/dealer/item")]
     [ApiController]
     public class DealerItemController : ControllerBase
     {

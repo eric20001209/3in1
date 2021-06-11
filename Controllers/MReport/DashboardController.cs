@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/dashboard")]
+    [Route("{hostId}/mreport/api/dashboard")]
     [ApiController]
     public class DashboardController : ControllerBase
     {

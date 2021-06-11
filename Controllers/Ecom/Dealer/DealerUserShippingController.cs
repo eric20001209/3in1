@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace eCommerce_API_RST.Controllers
 {
-    [Route("api/dealer/shipping")]
+    [Route("{hostId}/ecom/api/dealer/shipping")]
     [ApiController]
     public class DealerUserShippingController : ControllerBase
     {

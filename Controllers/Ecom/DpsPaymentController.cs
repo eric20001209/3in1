@@ -19,7 +19,7 @@ using System.Data.SqlClient;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/dps")]   //handle dps payment
+    [Route("{hostId}/ecom/api/dps")]   //handle dps payment
     [ApiController]
     public class DpsPaymentController : ControllerBase
     {

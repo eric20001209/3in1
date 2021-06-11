@@ -20,7 +20,7 @@ using eCommerce_API.Services;
 namespace eCommerce_API.Controllers
 {
     [Authorize]
-    [Route("api/dealer")]
+    [Route("{hostId}/ecom/api/dealer")]
     [ApiController]
     public class DealerLoginController : ControllerBase
     {

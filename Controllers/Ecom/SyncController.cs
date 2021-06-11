@@ -18,7 +18,7 @@ using eCommerce_API.Dto;
 
 namespace eCommerce_API_RST.Controllers
 {
-	[Route("api/sync1")]
+	[Route("{hostId}/ecom/api/sync1")]
 	[ApiController]
 	public class SyncController : ControllerBase
 	{

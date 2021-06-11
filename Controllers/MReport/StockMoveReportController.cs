@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/StockMove")]
+    [Route("{hostId}/mreport/api/StockMove")]
     public class StockMoveReportController : Controller
     {
         private readonly farroContext _context;

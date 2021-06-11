@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/SalesItemDailyReport")]
+    [Route("{hostId}/mreport/api/SalesItemDailyReport")]
     public class SalesItemDailyReportController : Controller
     {
         private readonly farroContext _context;

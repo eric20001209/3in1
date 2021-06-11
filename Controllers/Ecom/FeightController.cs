@@ -10,7 +10,7 @@ using eCommerce_API.Services;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/freight")]
+    [Route("{hostId}/ecom/api/freight")]
     [ApiController]
     public class FeightController : ControllerBase
     {

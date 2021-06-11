@@ -27,7 +27,7 @@ namespace Sync.Controllers
 {
 	//[AllowAnonymous]
 	[Authorize(Policy = "HostIdAndAuthCodeMustMatch")]
-	[Route("{hostId}/api/sync")]
+	[Route("{hostId}/sync/api")]
 	[ApiController]
 	public class SyncController : ControllerBase
 	{

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/SalesInvoiceItems")]
+    [Route("{hostId}/mreport/api/SalesInvoiceItems")]
     public class SalesInvoiceItemController : Controller
     {
         

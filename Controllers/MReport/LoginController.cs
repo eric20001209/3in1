@@ -8,7 +8,7 @@ using FarroAPI.Models;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/login")]
+    [Route("{hostId}/mreport/api/login")]
     public class LoginController : Controller
     {
         private readonly farroContext _context;

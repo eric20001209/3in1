@@ -13,7 +13,7 @@ using System.Text;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/cart")]
+    [Route("{hostId}/ecom/api/cart")]
     [ApiController]
     public class CartController : ControllerBase
     {

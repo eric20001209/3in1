@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.JsonPatch;
 namespace eCommerce_API.Controllers
 {
     [Authorize]
-    [Route("api/userLogin")]
+    [Route("{hostId}/ecom/api/userLogin")]
     [ApiController]
     public class UserLoginController : ControllerBase
     {

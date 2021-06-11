@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FarroAPI.Controllers
 {
-    [Route("{hostId}/api/suppliers")]
+    [Route("{hostId}/mreport/api/suppliers")]
     public class SupplierController : Controller
     {
         private readonly farroContext context;

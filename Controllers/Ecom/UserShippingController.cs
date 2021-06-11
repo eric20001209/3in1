@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/shipping")]
+    [Route("{hostId}/ecom/api/shipping")]
     [ApiController]
     public class UserShippingController : ControllerBase
     {

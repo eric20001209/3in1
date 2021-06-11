@@ -14,7 +14,7 @@ using System.Text;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/latipay")]
+    [Route("{hostId}/ecom/api/latipay")]
     [ApiController]
     public class LatipayController : ControllerBase
     {

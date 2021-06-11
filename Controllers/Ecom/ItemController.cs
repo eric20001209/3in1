@@ -21,7 +21,7 @@ using eCommerce_API.Models;
 namespace eCommerce_API.Controllers
 {
     //    [Authorize]
-    [Route("api/item")]
+    [Route("{hostId}/ecom/api/item")]
     [ApiController]
 //  [EnableCors("AllowMyOrigin")]
     public class ItemController : ControllerBase

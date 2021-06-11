@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace eCommerce_API_RST.Controllers
 {
-    [Route("api/dealer/order")]
+    [Route("{hostId}/ecom/api/dealer/order")]
     [ApiController]
     public class DealerOrderController : ControllerBase
     {

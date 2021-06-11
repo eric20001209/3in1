@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce_API_RST.Controllers
 {
-    [Route("api/rollback")]
+    [Route("{hostId}/ecom/api/rollback")]
     [ApiController]
     public class TestRollBackController : ControllerBase
     {

@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace eCommerce_API_RST.Controllers
 {
-    [Route("api/invoice")]
+    [Route("{hostId}/ecom/api/invoice")]
     [ApiController]
     public class InvoiceController : ControllerBase
     {

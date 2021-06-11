@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eCommerce_API_RST.Controllers
 {
-	[Route("api/ecom")]
+	[Route("{hostId}/ecom/api/ecom")]
 	[ApiController]
 	public class SettingsController : ControllerBase
 	{

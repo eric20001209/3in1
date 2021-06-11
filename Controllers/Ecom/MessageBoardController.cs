@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace eCommerce_API_RST.Controllers
 {
-	[Route("api/message")]
+	[Route("{hostId}/ecom/api/message")]
 	[ApiController]
 	public class MessageBoardController : ControllerBase
 	{

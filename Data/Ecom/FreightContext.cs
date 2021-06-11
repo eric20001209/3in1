@@ -2,18 +2,39 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using eCommerce_API.Models;
+using Microsoft.Extensions.Configuration;
+using eCommerce_API_RST_Multi.Data;
+using Microsoft.AspNetCore.Http;
+using System.Data;
+using Microsoft.AspNetCore.Routing;
+using System.Linq;
+using System.Data.SqlClient;
 
 namespace eCommerce_API.Data
 {
     public partial class FreightContext : DbContext
     {
+        private readonly IConfiguration _configuration;
+        private readonly HostDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private IDbConnection DbConnection { get; set; }
+        private int HostId { get; set; }
+
         public FreightContext()
         {
         }
 
-        public FreightContext(DbContextOptions<FreightContext> options)
+        public FreightContext(DbContextOptions<FreightContext> options, IConfiguration configuration, HostDbContext context,
+                        IHttpContextAccessor httpContextAccessor)
             : base(options)
         {
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+            var hostId = _httpContextAccessor.HttpContext.GetRouteValue("hostId").ToString();
+            // httpContextAccessor.HttpContext.Request.RouteValues["hostId"];    //this is for .net core 3
+
+            this._configuration = configuration;
+            HostId = int.Parse(hostId);
         }
 
         public virtual DbSet<Settings> Settings { get; set; }
@@ -21,14 +42,32 @@ namespace eCommerce_API.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+  //        if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                //              #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //             optionsBuilder.UseSqlServer("Server=192.168.1.248\\sql2014;Database=wanfang_cloud14;User Id=eznz;password=9seqxtf7");
-                //             optionsBuilder.UseSqlServer("Server=localhost;Database=rst374_cloud12;User Id=;password=;Trusted_Connection=True");
-//              optionsBuilder.UseSqlServer("Server=192.168.1.218\\sqlexpress;Database=rst374_cloud12;User Id=eznz;password=9seqxtf7");
-//              optionsBuilder.UseSqlServer("Server=192.168.1.218\\sql2008;Database=onestopshop08;User Id=eznz;password=9seqxtf7");
- //             optionsBuilder.UseSqlServer("Server=192.168.1.218\\sql2008;Database=dev_acqshopping_dc;User Id=eznz;password=9seqxtf7");
+                var webapp = _context.webApps.FirstOrDefault(c => c.Id == HostId);
+                if (webapp != null)
+                {
+                    var dbid = webapp.DbId;
+                    var host = _context.HostTenants.Where(c => c.Id == dbid).FirstOrDefault();
+                    if (host != null)
+                    {
+                        var connectionString = host.Connstr;
+                        DbConnection = new SqlConnection(this._configuration.GetConnectionString(connectionString));
+                        optionsBuilder.UseSqlServer(connectionString);
+                    }
+                    else
+                    {
+                        DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                        optionsBuilder.UseSqlServer(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                    }
+                }
+                else
+                {
+                    DbConnection = new SqlConnection(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                    optionsBuilder.UseSqlServer(this._configuration.GetConnectionString("rst374_cloud12Context"));
+                }
             }
         }
 

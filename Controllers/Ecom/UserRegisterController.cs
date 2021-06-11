@@ -14,7 +14,7 @@ using System.Text;
 namespace eCommerce_API.Controllers
 {
     [Authorize]
-    [Route("api/userRegister")]
+    [Route("{hostId}/ecom/api/userRegister")]
     [ApiController]
     public class UserRegisterController : ControllerBase
     {

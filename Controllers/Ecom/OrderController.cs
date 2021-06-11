@@ -29,7 +29,7 @@ using System.Security.Policy;
 
 namespace eCommerce_API.Controllers
 {
-    [Route("api/order")]
+    [Route("{hostId}/ecom/api/order")]
     [ApiController]
     public class OrderController : ControllerBase
     {
