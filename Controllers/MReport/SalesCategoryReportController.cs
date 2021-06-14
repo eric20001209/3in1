@@ -48,7 +48,7 @@ namespace FarroAPI.Controllers
                 string categories = "";
                 if (filter.Categories.Count > 0)
                 {
-                    categories = " and c.cat in (";
+                    categories = " and s.cat in (";
                     for (int i = 0; i < filter.Categories.Count; i++)
                     {
                         categories += @"'" + filter.Categories[i] + @"'";
@@ -73,41 +73,27 @@ namespace FarroAPI.Controllers
                     }
                 }
 
-                commandText = @"select c.cat as Category 
+            commandText = @"select s.cat as Category 
                                     , round(sum(s.commit_price * s.quantity), 2) as Revenue
                                     , round(sum((s.commit_price - s.supplier_price) * s.quantity), 2) as Profit
                                     , count(distinct i.invoice_number) as InvoiceQuantity
-                                    , (select round(sum(s.quantity * s.commit_price), 2)
-	                                    from invoice i
-	                                    join branch b on i.branch = b.id
-	                                    join sales s on i.invoice_number = s.invoice_number
-	                                    left join code_relations cr on s.code = cr.code
-	                                    where b.fax <> 'hidden4mreport'
-	                                    and s.price_on_special <> 1
-	                                    and cr.code <> '-1001'
-	                                    and round((s.normal_price - commit_price), 6) > 0
-	                                    and i.commit_date >= @startDateTime 
-	                                    and i.commit_date < @endDateTime
-                                        and i.tax=isnull(@tax,i.tax) 
-	                                    " + branchIds + @"
-	                                    and cr.cat = c.cat ) as MarkDown
+                                    , 0 as MarkDown
                                     from invoice i
                                     join sales s on i.invoice_number = s.invoice_number
-                                    join branch b on i.branch = b.id
-                                    left join code_relations c on s.code = c.code
+                                    join branch b on i.branch = b.id                           
                                     where b.fax <> 'hidden4mreport'
                                     and s.code <> '-900001'
                                     and s.code <> '-1001'
                                     and i.commit_date >= @startDateTime 
                                     and i.commit_date < @endDateTime
-                                    and i.tax=isnull(@tax,i.tax) 
+                                 
                                     " + branchIds + @"
                                     " + categories + @"
-                                    group by c.cat
-                                    order by c.cat
+                                    group by s.cat
+                                    order by s.cat
                                     Collate Database_Default";
 
-                commandTextForMinus1001 = @"select p.promo_cat as Category
+            commandTextForMinus1001 = @"select p.promo_cat as Category
                                             , round(sum(s.commit_price * s.quantity), 2) as Amount
                                             from invoice i
                                             join branch b on i.branch = b.id
@@ -117,38 +103,38 @@ namespace FarroAPI.Controllers
                                             and s.code = '-1001'
                                             and i.commit_date >= @startDateTime 
                                             and i.commit_date < @endDateTime
-                                            and i.tax=isnull(@tax,i.tax) 
+                                       
                                             " + branchIds + @"
                                             " + categoriesForMinus1001 + @"
                                             group by p.promo_cat";
 
-                // Run SQL Command
-                using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+            // Run SQL Command
+            using (var connection = (SqlConnection)_context.Database.GetDbConnection())
                 {
                     var commandForMinus1001 = new SqlCommand(commandTextForMinus1001, connection);
                     commandForMinus1001.Parameters.AddWithValue("@startDateTime", filter.StartDateTime);
                     commandForMinus1001.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
-                if (filter.OnlineOrder)
-                {
-                    commandForMinus1001.Parameters.AddWithValue("@tax", 0);
-                }
-                else
-                {
-                    commandForMinus1001.Parameters.AddWithValue("@tax", DBNull.Value);
-                }
+                //if (filter.OnlineOrder)
+                //{
+                //    commandForMinus1001.Parameters.AddWithValue("@tax", 0);
+                //}
+                //else
+                //{
+                //    commandForMinus1001.Parameters.AddWithValue("@tax", DBNull.Value);
+                //}
                 List<Tuple<string, decimal>> minus1001ResultList = new List<Tuple<string, decimal>>();
 
                     var command = new SqlCommand(commandText, connection);
                     command.Parameters.AddWithValue("@startDateTime", filter.StartDateTime);
                     command.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
-                if (filter.OnlineOrder)
-                {
-                    command.Parameters.AddWithValue("@tax", 0);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@tax", DBNull.Value);
-                }
+                //if (filter.OnlineOrder)
+                //{
+                //    command.Parameters.AddWithValue("@tax", 0);
+                //}
+                //else
+                //{
+                //    command.Parameters.AddWithValue("@tax", DBNull.Value);
+                //}
                 _context.Database.OpenConnection();
                     using (var resultForMinus1001 = await commandForMinus1001.ExecuteReaderAsync())
                     {

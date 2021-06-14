@@ -82,7 +82,7 @@ namespace FarroAPI.Controllers
                             join invoice i on s.invoice_number = i.invoice_number
                             join branch b on i.branch = b.id
                             where i.commit_date >= @startDateTime
-                            and i.tax=isnull(@tax,i.tax) 
+
                             and i.commit_date < @endDateTime
                             and s.code <> '-900001'"
 
@@ -97,14 +97,14 @@ namespace FarroAPI.Controllers
                     var command = new SqlCommand(commandText, connection);
                     command.Parameters.AddWithValue("@startDateTime", filter.StartDateTime);
                     command.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
-                    if (filter.OnlineOrder)
-                    {
-                        command.Parameters.AddWithValue("@tax", 0);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@tax", DBNull.Value);
-                    }
+                    //if (filter.OnlineOrder)
+                    //{
+                    //    command.Parameters.AddWithValue("@tax", 0);
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@tax", DBNull.Value);
+                    //}
                 _context.Database.OpenConnection();
                     using (var result = await command.ExecuteReaderAsync())
                     {

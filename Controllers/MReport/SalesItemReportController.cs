@@ -52,7 +52,7 @@ namespace FarroAPI.Controllers
                 string supplierIds = "";
                 if (filter.SupplierIds.Count > 0)
                 {
-                    supplierIds = " and c.supplier in (";
+                    supplierIds = " and s.supplier in (";
                     for (int i = 0; i < filter.SupplierIds.Count; i++)
                     {
                         supplierIds += filter.SupplierIds[i].ToString();
@@ -85,43 +85,42 @@ namespace FarroAPI.Controllers
                     }
                 }
 
-                commandText = @"select b.id as BranchId
-                                , c.code as Code
-	                            , (select name from code_relations where code = c.code) as Description
-	                            , (select name_cn from code_relations where code = c.code) as Name
-	                            , (select cat from code_relations where code = c.code) as Category
-	                            , (select s_cat from code_relations where code = c.code) as SubCategory
-	                            , (select ss_cat from code_relations where code = c.code) as SubSubCategory
+            commandText = @"select b.id as BranchId
+                                , s.code as Code
+	                            , s.name as Description
+	                            , s.name_cn as Name
+	                            , s.cat as Category
+	                            , s.s_cat as SubCategory
+	                            , s.ss_cat as SubSubCategory
                                 , round(sum(s.commit_price * s.quantity), 2) as Sales
                                 , round(sum((s.commit_price - s.supplier_price) * s.quantity), 2) as Profit
 	                            , round(sum(s.quantity), 3) as Quantity
                             from sales s
                             join invoice i on s.invoice_number = i.invoice_number
                             join branch b on i.branch = b.id
-                            join code_relations c on s.code = c.code
+                           
                             where i.commit_date >= @startDateTime
                             and i.commit_date < @endDateTime
-                            and i.tax=isnull(@tax,i.tax)
                             and s.code <> '-900001'"
-                            + subSubCategories + branchIds + supplierIds +
-                            @" group by b.id, c.code
-                            order by b.id, c.code";
+                        + subSubCategories + branchIds + supplierIds +
+                        @" group by b.id, s.code,s.name,s.name_cn,s.cat,s.ss_cat,s.s_cat,s.name_cn
+                            order by b.id, s.code";
 
-                // Run SQL Command
-                using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+            // Run SQL Command
+            using (var connection = (SqlConnection)_context.Database.GetDbConnection())
                 {
 
                     var command = new SqlCommand(commandText, connection);
                     command.Parameters.AddWithValue("@startDateTime", filter.StartDateTime);
                     command.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
-                if (filter.OnlineOrder)
-                {
-                    command.Parameters.AddWithValue("@tax", 0);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@tax", DBNull.Value);
-                }
+                //if (filter.OnlineOrder)
+                //{
+                //    command.Parameters.AddWithValue("@tax", 0);
+                //}
+                //else
+                //{
+                //    command.Parameters.AddWithValue("@tax", DBNull.Value);
+                //}
                 _context.Database.OpenConnection();
                     using (var result = await command.ExecuteReaderAsync())
                     {

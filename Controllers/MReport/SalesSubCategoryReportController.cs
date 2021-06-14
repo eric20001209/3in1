@@ -86,7 +86,7 @@ namespace FarroAPI.Controllers
                             join branch b on i.branch = b.id
                             where i.commit_date >= @startDateTime
                             and i.commit_date < @endDateTime
-                            and i.tax=isnull(@tax,i.tax)
+
                             and s.code <> '-900001'
                             and s.code <> '-1001'"
                             + categories + branchIds +
@@ -104,7 +104,7 @@ namespace FarroAPI.Controllers
                                             and s.code = '-1001'
                                             and i.commit_date >= @startDateTime 
                                             and i.commit_date < @endDateTime
-                                            and i.tax=isnull(@tax,i.tax)
+
                                             " + branchIds + @"
                                             " + categoriesForMinus1001 + @"
                                             group by b.id, p.promo_cat";
@@ -119,25 +119,25 @@ namespace FarroAPI.Controllers
                     commandForMinus1001.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
                     List<Tuple<int, string, decimal>> minus1001ResultList = new List<Tuple<int, string, decimal>>();
                 
-                if (filter.OnlineOrder)
-                {
-                    commandForMinus1001.Parameters.AddWithValue("@tax", 0);
-                }
-                else
-                {
-                    commandForMinus1001.Parameters.AddWithValue("@tax", DBNull.Value);
-                }
+                //if (filter.OnlineOrder)
+                //{
+                //    commandForMinus1001.Parameters.AddWithValue("@tax", 0);
+                //}
+                //else
+                //{
+                //    commandForMinus1001.Parameters.AddWithValue("@tax", DBNull.Value);
+                //}
                 var command = new SqlCommand(commandText, connection);
                     command.Parameters.AddWithValue("@startDateTime", filter.StartDateTime);
                     command.Parameters.AddWithValue("@endDateTime", filter.EndDateTime);
-                if (filter.OnlineOrder)
-                {
-                    command.Parameters.AddWithValue("@tax", 0);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@tax", DBNull.Value);
-                }
+                //if (filter.OnlineOrder)
+                //{
+                //    command.Parameters.AddWithValue("@tax", 0);
+                //}
+                //else
+                //{
+                //    command.Parameters.AddWithValue("@tax", DBNull.Value);
+                //}
                 _context.Database.OpenConnection();
                     using (var resultForMinus1001 = await commandForMinus1001.ExecuteReaderAsync())
                     {
