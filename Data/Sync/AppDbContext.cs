@@ -2355,6 +2355,7 @@ namespace Sync.Data
 			modelBuilder.Entity<Catalog>(entity =>
 			{
 				entity.ToTable("catalog");
+                entity.HasKey(k =>new { k.Seq , k.Cat , k.SCat, k.SSCat });
                 entity.Property(e => e.Seq).HasColumnName("seq").IsRequired(); ;
 				entity.Property(e => e.Cat).HasColumnName("cat");
 				entity.Property(e => e.SCat).HasColumnName("s_cat");

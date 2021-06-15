@@ -9,7 +9,7 @@ namespace Sync.Models
 	public class Catalog
 	{
 
-		[Key]
+	//	[Key]
 
 		public string Seq { get; set; }
 		public string Cat { get; set; }

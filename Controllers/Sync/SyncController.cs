@@ -1318,7 +1318,7 @@ namespace Sync.Controllers
 		}
 		private async Task<bool> categoryExists(Catalog catalog)
 		{
-			var result = await _context.Category.AnyAsync(c => c == catalog);
+			var result = await _context.Category.AnyAsync(c => c.Cat == catalog.Cat && c.SCat == catalog.SCat && c.SSCat == catalog.SSCat && c.Seq == catalog.Seq);
 			return result;
 		}
 
@@ -1377,7 +1377,7 @@ namespace Sync.Controllers
 
 		}
 
-		[HttpPost("{auth}/createItem")]
+		[HttpPost("{auth}/createItem/{branchId}")]
 		public async Task<IActionResult> createItem([FromBody] CreateItemDto createItemDto)
 		{
 			if (!ModelState.IsValid)
@@ -1492,7 +1492,7 @@ namespace Sync.Controllers
 							SCat = createItemDto.BrandNew,
 							SSCat = ""
 						};
-						if (await categoryExists(catalog))
+						if (!await categoryExists(catalog))
 							await _context.Category.AddAsync(catalog);
 					}
 					if (createItemDto.CatNew != null && createItemDto.CatNew != "")
@@ -1504,7 +1504,7 @@ namespace Sync.Controllers
 							SCat = "",
 							SSCat = ""
 						};
-						if (await categoryExists(catalog))
+						if (!await categoryExists(catalog))
 							await _context.Category.AddAsync(catalog);
 					}
 
@@ -1517,7 +1517,7 @@ namespace Sync.Controllers
 							SCat = createItemDto.SCatNew ?? "",
 							SSCat = ""
 						};
-						if (await categoryExists(catalog))
+						if (!await categoryExists(catalog))
 							await _context.Category.AddAsync(catalog);
 					}
 
@@ -1530,7 +1530,7 @@ namespace Sync.Controllers
 							SCat = createItemDto.SCatNew ?? "",
 							SSCat = createItemDto.SSCatNew ?? ""
 						};
-						if (await categoryExists(catalog))
+						if (!await categoryExists(catalog))
 							await _context.Category.AddAsync(catalog);
 					}
 
