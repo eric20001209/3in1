@@ -1260,6 +1260,7 @@ namespace Sync.Controllers
 		}
 
 		/****************/
+		[AllowAnonymous]
 		[HttpPost("{auth}/card/new")]
 		public async Task<IActionResult> newCard([FromBody] CardCreateDto input)
 		{
