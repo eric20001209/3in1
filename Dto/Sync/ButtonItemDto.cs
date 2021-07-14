@@ -13,5 +13,6 @@ namespace Sync.Dtos
 		public string Name { get; set; }
 		public string NameEn { get; set; }
 		public string Location { get; set; }
+		public byte[] Pic { get; set; }
 	}
 }

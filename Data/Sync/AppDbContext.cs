@@ -176,6 +176,8 @@ namespace Sync.Data
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.NameEn).HasColumnName("name_en");
                 entity.Property(e => e.IsIndivisual).HasColumnName("is_indivisual");
+                entity.Property(e => e.Code).HasColumnName("code");
+                entity.Property(e => e.Pic).HasColumnName("pic");
             });
             modelBuilder.Entity<ButtonItem>(entity =>
             {
@@ -188,7 +190,7 @@ namespace Sync.Data
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.NameEn).HasColumnName("name_en");
                 entity.Property(e => e.Location).HasColumnName("location");
- 
+                entity.Property(e => e.Pic).HasColumnName("pic");
             });
 
             modelBuilder.Entity<Card>(entity =>

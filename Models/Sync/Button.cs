@@ -12,5 +12,7 @@ namespace Sync.Models
 		public string NameEn { get; set; }
 		public bool IsIndivisual { get; set; }
 		public virtual ICollection<Button> ButtonItems{ get; set; }
-	}
+		public int? Code { get; set; }
+        public byte[] Pic { get; set; }
+    }
 }

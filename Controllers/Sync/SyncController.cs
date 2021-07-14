@@ -156,7 +156,10 @@ namespace Sync.Controllers
 					Name = b.Name,
 					NameEn = b.NameEn,
 					IsIndivisual = b.IsIndivisual,
+					Code = b.Code,
+					Pic = b.Pic,
 					Barcode = _button.getBarcodeForIndiButton(b.Id),
+					
 					ButtonItems = _button.getButtonItems(b.Id)
 				})
 				.ToListAsync();

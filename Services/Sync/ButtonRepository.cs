@@ -32,8 +32,8 @@ namespace Sync.Services
 									 Code = b.Code,
 									 Name = b.Name,
 									 NameEn = b.NameEn,
-									 Location = b.Location
-
+									 Location = b.Location,
+									 Pic = b.Pic
 								 }).ToList();
 
 			return final;

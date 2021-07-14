@@ -12,6 +12,8 @@ namespace Sync.Dtos
 		public string NameEn { get; set; }
 		public bool IsIndivisual { get; set; }
 		public string Barcode { get; set; }
+		public int? Code { get; set; }
+		public byte[] Pic { get; set; }
 		public ICollection<ButtonItemDto> ButtonItems { get; set; }
 	}
 }

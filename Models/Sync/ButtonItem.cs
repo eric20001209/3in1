@@ -13,6 +13,7 @@ namespace Sync.Models
 		public string Name { get; set; }
 		public string NameEn { get; set; }
 		public string Location { get; set; }
+		public byte[] Pic { get; set; }
 
 		[ForeignKey("Button")]
 		public int ButtonId { get; set; }
