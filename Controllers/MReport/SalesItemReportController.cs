@@ -87,6 +87,7 @@ namespace FarroAPI.Controllers
 
             commandText = @"select b.id as BranchId
                                 , s.code as Code
+                                ,s.supplier_code
 	                            , s.name as Description
 	                            , s.name_cn as Name
 	                            , s.cat as Category
@@ -103,7 +104,7 @@ namespace FarroAPI.Controllers
                             and i.commit_date < @endDateTime
                             and s.code <> '-900001'"
                         + subSubCategories + branchIds + supplierIds +
-                        @" group by b.id, s.code,s.name,s.name_cn,s.cat,s.ss_cat,s.s_cat,s.name_cn
+                        @" group by b.id, s.code,s.name,s.name_cn,s.cat,s.ss_cat,s.s_cat,s.name_cn,s.supplier_code
                             order by b.id, s.code";
 
             // Run SQL Command
@@ -137,7 +138,10 @@ namespace FarroAPI.Controllers
                                 SubSubCategory = Convert.ToString(result["SubSubCategory"]),
                                 AmountWithoutGST = Convert.ToDecimal(result["Sales"] is DBNull ? 0 : result["Sales"]),
                                 ProfitWithoutGST = Convert.ToDecimal(result["Profit"] is DBNull ? 0 : result["Profit"]),
-                                Quantity = Convert.ToInt32(result["Quantity"])
+                                Quantity = Convert.ToInt32(result["Quantity"]),
+                                SupplierCode=result["supplier_code"].ToString()
+
+
                             };
                             resultList.Add(dto);
                         }

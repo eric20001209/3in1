@@ -17,5 +17,6 @@ namespace FarroAPI.Models
         public decimal AmountWithoutGST { get; set; }
         public decimal ProfitWithoutGST { get; set; }
         public double Quantity { get; set; }
+        public string SupplierCode { get; set; }
     }
 }

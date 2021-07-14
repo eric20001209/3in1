@@ -189,8 +189,8 @@ namespace Sync.Controllers
 					messageDto.Msg = $"failed! parameter branchId needed!";
 					return NotFound(messageDto);
 				}
-				var buttons = await _context.UpdatedButton.FirstOrDefaultAsync(ui => ui.BranchId == branchId);
-				if (buttons == null)
+				var buttons = await _context.UpdatedButton.Where(ui => ui.BranchId == branchId).ToListAsync();
+				if (buttons ==null)
 				{
 					messageDto.Code = "1";
 					messageDto.Msg = $"failed! button doesn't exist!";
@@ -199,7 +199,11 @@ namespace Sync.Controllers
 
 				else
 				{
-					_context.UpdatedButton.Remove(buttons);
+					foreach (var button in buttons)
+					{
+						_context.UpdatedButton.Remove(button);
+					}
+				
 					await _context.SaveChangesAsync();
 				}
 				messageDto.Code = "0";

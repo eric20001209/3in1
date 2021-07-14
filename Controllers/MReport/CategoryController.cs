@@ -34,7 +34,7 @@ namespace FarroAPI.Controllers
             return Ok(catgoryDtoList);
         }
 
-        [HttpGet("{hostId}/api/Categories/Sales")]
+        [HttpGet("{hostId}/mreport/api/Categories/Sales")]
         public async Task<IActionResult> GetSalesCategories()
         {
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -50,7 +50,7 @@ namespace FarroAPI.Controllers
             return Ok(catgoryDtoList);
         }
 
-        [HttpGet("{hostId}/api/SubSubCategories/Item")]
+        [HttpGet("{hostId}/mreport/api/SubSubCategories/Item")]
         public async Task<IActionResult> GetItemSubSubCategories()
         {
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -73,7 +73,7 @@ namespace FarroAPI.Controllers
             return Ok(resultList);
         }
 
-        [HttpGet("{hostId}/api/SubSubCategories/Sales")]
+        [HttpGet("{hostId}/mreport/api/SubSubCategories/Sales")]
         public async Task<IActionResult> GetSalesSubSubCategories()
         {
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
