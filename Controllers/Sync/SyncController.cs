@@ -512,6 +512,7 @@ namespace Sync.Controllers
 										LevelPrice4 = c.LevelPrice4,
 										LevelPrice5 = c.LevelPrice5,
 										LevelPrice6 = c.LevelPrice6,
+										PicUrl = _config["Url"] + "/pi/" + c.Code + ".jpg",
 										Barcodes = _item.getBarcodesWithQtyAndPrice(ui.ItemCode),
 										BranchPrice = _item.getOnlineShopPrice(branchId, ui.ItemCode),
 										Stock = _item.getItemStork(branchId, ui.ItemCode),
