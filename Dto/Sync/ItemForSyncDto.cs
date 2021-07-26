@@ -49,5 +49,6 @@ namespace Sync.Dtos
 		[Timestamp]
 		public byte[] TimeStamp { get; set; }
 		public string TimeStampS { get; set; }
+		public string PicUrl { get; set; }
 	}
 }
