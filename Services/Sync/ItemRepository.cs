@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Sync.Services
 {
@@ -27,10 +28,12 @@ namespace Sync.Services
 	public class ItemRepository : IItem
 	{
 		private readonly Sync.Data.AppDbContext _context;
+		private readonly IConfiguration _config;
 
-		public ItemRepository(Sync.Data.AppDbContext context)
+		public ItemRepository(Sync.Data.AppDbContext context, IConfiguration config)
 		{
 			_context = context;
+			_config = config;
 		}
 		public IEnumerable<string> getBarcodes(int code)
 		{
@@ -70,7 +73,7 @@ namespace Sync.Services
 						Highlight = pd.Highlight,
 						Specification = pd.Spec,
 						Manufacture = pd.Manufacture,
-						Picure = pd.Pic,
+						Picure = _config["Url"] + "/pi/" + code + ".jpg",
 						//				Rev = pd.Rev,
 						Warranty = pd.Warranty,
 						Details = pd.Details,
@@ -78,6 +81,7 @@ namespace Sync.Services
 						Directions = pd.Directions,
 						Advice = pd.Advice,
 						Shipping = pd.Shipping
+					
 					}).FirstOrDefault();
 
 		}
