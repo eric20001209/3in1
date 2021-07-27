@@ -12,6 +12,7 @@ namespace Sync.Dtos
 		public string Id { get; set; }
 		public int Code { get; set; }
 		public string SupplierCode { get; set; }
+		public decimal SupplierPrice { get; set; }
 		public string Name { get; set; }
 		public string NameCn { get; set; }
 		public string Brand { get; set; }
