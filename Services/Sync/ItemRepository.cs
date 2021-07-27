@@ -73,7 +73,7 @@ namespace Sync.Services
 						Highlight = pd.Highlight,
 						Specification = pd.Spec,
 						Manufacture = pd.Manufacture,
-						Picure = _config["Url"] + "/pi/" + code + ".jpg",
+						Picture = _config["Url"] + "/pi/" + code + ".jpg",
 						//				Rev = pd.Rev,
 						Warranty = pd.Warranty,
 						Details = pd.Details,

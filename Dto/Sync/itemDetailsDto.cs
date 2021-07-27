@@ -10,7 +10,7 @@ namespace Sync.Dtos
 		public string Highlight { get; set; }
 		public string Specification { get; set; }
 		public string Manufacture { get; set; }
-		public string Picure { get; set; }
+		public string Picture { get; set; }
 //		public string Rev { get; set; }
 		public string Warranty { get; set; }
 		public string Details { get; set; }
