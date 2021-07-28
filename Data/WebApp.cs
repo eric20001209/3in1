@@ -14,5 +14,6 @@ namespace gpos_api_3in1_multi_tenant.Data
         [Display(Name = "App Id")]
         public int Id { get; set; }
         public int DbId { get; set; }
+        public string Url { get; set; }
     }
 }

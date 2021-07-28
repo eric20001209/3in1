@@ -49,6 +49,7 @@ namespace eCommerce_API_RST_Multi.Data
                 entity.ToTable("web_app");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.DbId).HasColumnName("db_id");
+                entity.Property(e => e.Url).HasColumnName("url");
             });
         }
     }

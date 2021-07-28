@@ -21,6 +21,7 @@ namespace Sync.Data
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IDbConnection DbConnection { get; set; }
         private int HostId { get; set; }
+        public string  Url { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, HostDbContext context,
                         IHttpContextAccessor httpContextAccessor
                     )
@@ -81,6 +82,7 @@ namespace Sync.Data
                 if (webapp != null)
                 {
                     var dbid = webapp.DbId;
+                    Url = webapp.Url;
                     var host = _context.HostTenants.Where(c => c.Id == dbid).FirstOrDefault();
                     if (host != null)
                     {
