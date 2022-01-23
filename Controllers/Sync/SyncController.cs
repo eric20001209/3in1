@@ -239,6 +239,13 @@ namespace Sync.Controllers
 					return NotFound(messageDto);
 				}
 
+				//var list1 = _context.Category.Select(c => new
+				//{
+				//	Seq = c.Seq == null ? "": c.Seq,
+				//	Cat = c.Cat == null ? "" : c.Cat,
+				//	SCat = c.SCat == null ? "" : c.SCat,
+				//	SSCat = c.SSCat == null ? "" : c.SSCat
+				//});
 
 				var list = await _context
 							.Category
@@ -246,10 +253,10 @@ namespace Sync.Controllers
 
 				.Select(c => new
 				{
-					c.Seq,
-					c.Cat,
-					c.SCat,
-					c.SSCat
+					Seq = c.Seq == null ? "" : c.Seq,
+					Cat = c.Cat == null ? "" : c.Cat,
+					SCat = c.SCat == null ? "" : c.SCat,
+					SSCat = c.SSCat == null ? "" : c.SSCat
 				}).Distinct().ToListAsync();
 
 				messageDto.Code = "0";
@@ -485,7 +492,8 @@ namespace Sync.Controllers
 										c.LevelPrice3,
 										c.LevelPrice4,
 										c.LevelPrice5,
-										c.LevelPrice6
+										c.LevelPrice6,
+										c.IsWebsiteItem
 									}), ui => ui.ItemCode, c => c.Code, (ui, c) => new ItemForSyncDto
 									{
 										Id = c.Id,
@@ -514,6 +522,7 @@ namespace Sync.Controllers
 										LevelPrice4 = c.LevelPrice4,
 										LevelPrice5 = c.LevelPrice5,
 										LevelPrice6 = c.LevelPrice6,
+										IsWebsiteItem = c.IsWebsiteItem,
 										//PicUrl = _config["Url"] + "/pi/" + c.Code + ".jpg",
 										Barcodes = _item.getBarcodesWithQtyAndPrice(ui.ItemCode),
 										BranchPrice = _item.getOnlineShopPrice(branchId, ui.ItemCode),

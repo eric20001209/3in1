@@ -35,6 +35,8 @@ namespace Sync.Dtos
 		public decimal LevelPrice7 { get; set; }
 		public decimal LevelPrice8 { get; set; }
 		public decimal LevelPrice9 { get; set; }
+
+		public bool IsWebsiteItem { get; set; }
 		//from barcode
 		public virtual IEnumerable<BarcodeDto> Barcodes { get; set; } = new List<BarcodeDto>();
 		//from code_branch
